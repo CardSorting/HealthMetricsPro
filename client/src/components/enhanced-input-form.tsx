@@ -353,7 +353,10 @@ export function EnhancedInputForm({ onFormChange, isMetric, onUnitToggle }: Enha
                     </FormLabel>
                     <TooltipInfo content="Select your typical activity level. This affects your daily calorie needs calculation." />
                   </div>
-                  <Select onValueChange={(value) => field.onChange(parseFloat(value))} defaultValue={field.value?.toString()}>
+                  <Select 
+                    onValueChange={(value) => field.onChange(parseFloat(value))} 
+                    value={field.value?.toString() || "1.375"}
+                  >
                     <FormControl>
                       <SelectTrigger className={`h-12 text-base rounded-xl border-gray-200/50 bg-white/70 backdrop-blur-sm apple-input transition-all duration-300 ${
                         completedFields.has('activityLevel') ? 'border-green-300 bg-green-50/30' : ''
@@ -362,24 +365,36 @@ export function EnhancedInputForm({ onFormChange, isMetric, onUnitToggle }: Enha
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent className="rounded-xl border-gray-200/50 bg-white/95 backdrop-blur-sm">
-                      {[
-                        { value: "1.2", label: "🪑 Sedentary", desc: "little to no exercise" },
-                        { value: "1.375", label: "🚶 Lightly active", desc: "light exercise 1-3 days/week" },
-                        { value: "1.55", label: "🏃 Moderately active", desc: "moderate exercise 3-5 days/week" },
-                        { value: "1.725", label: "💪 Very active", desc: "hard exercise 6-7 days/week" },
-                        { value: "1.9", label: "🔥 Extremely active", desc: "very hard exercise, physical job" }
-                      ].map((option) => (
-                        <SelectItem 
-                          key={option.value} 
-                          value={option.value} 
-                          className="rounded-lg py-3 hover:bg-blue-50 transition-colors duration-200"
-                        >
-                          <div className="flex flex-col">
-                            <span className="font-medium">{option.label}</span>
-                            <span className="text-xs text-gray-500 capitalize">{option.desc}</span>
-                          </div>
-                        </SelectItem>
-                      ))}
+                      <SelectItem value="1.2" className="rounded-lg py-3 hover:bg-blue-50 transition-colors duration-200">
+                        <div className="flex flex-col">
+                          <span className="font-medium">🪑 Sedentary</span>
+                          <span className="text-xs text-gray-500">Little to no exercise</span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="1.375" className="rounded-lg py-3 hover:bg-blue-50 transition-colors duration-200">
+                        <div className="flex flex-col">
+                          <span className="font-medium">🚶 Lightly active</span>
+                          <span className="text-xs text-gray-500">Light exercise 1-3 days/week</span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="1.55" className="rounded-lg py-3 hover:bg-blue-50 transition-colors duration-200">
+                        <div className="flex flex-col">
+                          <span className="font-medium">🏃 Moderately active</span>
+                          <span className="text-xs text-gray-500">Moderate exercise 3-5 days/week</span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="1.725" className="rounded-lg py-3 hover:bg-blue-50 transition-colors duration-200">
+                        <div className="flex flex-col">
+                          <span className="font-medium">💪 Very active</span>
+                          <span className="text-xs text-gray-500">Hard exercise 6-7 days/week</span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="1.9" className="rounded-lg py-3 hover:bg-blue-50 transition-colors duration-200">
+                        <div className="flex flex-col">
+                          <span className="font-medium">🔥 Extremely active</span>
+                          <span className="text-xs text-gray-500">Very hard exercise, physical job</span>
+                        </div>
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage className="text-xs" />
