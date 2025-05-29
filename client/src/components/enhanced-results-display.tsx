@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { TooltipInfo } from "./health-calculator/tooltip-info";
-import { Weight, Flame, Utensils, Target, TrendingUp, Award } from "lucide-react";
+import { Weight, Flame, Utensils, Target, TrendingUp, Award, Save } from "lucide-react";
 import { HealthMetrics } from "@/lib/health-calculations";
 import { formatWeight } from "@/lib/unit-conversions";
 
 interface EnhancedResultsDisplayProps {
   metrics: HealthMetrics | null;
   isMetric: boolean;
+  onSaveCalculation?: () => void;
 }
 
-export function EnhancedResultsDisplay({ metrics, isMetric }: EnhancedResultsDisplayProps) {
+export function EnhancedResultsDisplay({ metrics, isMetric, onSaveCalculation }: EnhancedResultsDisplayProps) {
   const [animationStage, setAnimationStage] = useState(0);
 
   useEffect(() => {
@@ -246,6 +248,21 @@ export function EnhancedResultsDisplay({ metrics, isMetric }: EnhancedResultsDis
           </div>
         </CardContent>
       </Card>
+
+      {/* Save Calculation Button */}
+      {onSaveCalculation && (
+        <Card className="glass-card border-0 shadow-xl apple-button">
+          <CardContent className="p-4">
+            <Button
+              onClick={onSaveCalculation}
+              className="w-full h-12 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-xl shadow-lg transition-all duration-300 apple-button"
+            >
+              <Save className="h-5 w-5 mr-2" />
+              Save to History
+            </Button>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

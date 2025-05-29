@@ -14,6 +14,7 @@ import { Activity, AlertTriangle, Sparkles } from "lucide-react";
 export default function HealthCalculator() {
   const [isMetric, setIsMetric] = useState(true);
   const [metrics, setMetrics] = useState<HealthMetrics | null>(null);
+  const [currentFormData, setCurrentFormData] = useState<FormData | null>(null);
   const [activeTab, setActiveTab] = useState<'calculator' | 'trends' | 'history' | 'settings'>('calculator');
   const [healthSession, setHealthSession] = useLocalStorage<HealthSession>('health-session', { entries: [] });
   const { toast } = useToast();
@@ -29,46 +30,49 @@ export default function HealthCalculator() {
         isMetric
       );
       setMetrics(calculatedMetrics);
-
-      // Save to local storage
-      const newEntry: HealthEntry = {
-        id: Date.now().toString(),
-        date: new Date().toISOString(),
-        age: data.age,
-        height: data.height,
-        weight: data.weight,
-        gender: data.gender,
-        activityLevel: data.activityLevel,
-        isMetric,
-        metrics: {
-          bmi: calculatedMetrics.bmi,
-          bmiCategory: calculatedMetrics.bmiCategory,
-          bmr: calculatedMetrics.bmr,
-          dailyCalories: calculatedMetrics.dailyCalories,
-          loseCalories: calculatedMetrics.loseCalories,
-          gainCalories: calculatedMetrics.gainCalories,
-          idealWeightMin: calculatedMetrics.idealWeightMin,
-          idealWeightMax: calculatedMetrics.idealWeightMax,
-        }
-      };
-
-      // Update session with new entry
-      setHealthSession(prev => ({
-        ...prev,
-        entries: [...prev.entries, newEntry],
-        currentEntry: newEntry
-      }));
-
-      toast({
-        title: "✨ Calculation Complete",
-        description: "Your health metrics have been calculated and saved!",
-        duration: 2000,
-      });
+      setCurrentFormData(data);
     } catch (error) {
       console.error('Error calculating metrics:', error);
       setMetrics(null);
     }
-  }, [isMetric, setHealthSession, toast]);
+  }, [isMetric]);
+
+  const handleSaveCalculation = useCallback(() => {
+    if (!currentFormData || !metrics) return;
+
+    const newEntry: HealthEntry = {
+      id: Date.now().toString(),
+      date: new Date().toISOString(),
+      age: currentFormData.age,
+      height: currentFormData.height,
+      weight: currentFormData.weight,
+      gender: currentFormData.gender,
+      activityLevel: currentFormData.activityLevel,
+      isMetric,
+      metrics: {
+        bmi: metrics.bmi,
+        bmiCategory: metrics.bmiCategory,
+        bmr: metrics.bmr,
+        dailyCalories: metrics.dailyCalories,
+        loseCalories: metrics.loseCalories,
+        gainCalories: metrics.gainCalories,
+        idealWeightMin: metrics.idealWeightMin,
+        idealWeightMax: metrics.idealWeightMax,
+      }
+    };
+
+    setHealthSession({
+      ...healthSession,
+      entries: [...healthSession.entries, newEntry],
+      currentEntry: newEntry
+    });
+
+    toast({
+      title: "✨ Calculation Saved",
+      description: "Your health metrics have been saved to history!",
+      duration: 2000,
+    });
+  }, [currentFormData, metrics, isMetric, healthSession, setHealthSession, toast]);
 
   const handleUnitToggle = useCallback((metric: boolean) => {
     setIsMetric(metric);
@@ -177,7 +181,11 @@ export default function HealthCalculator() {
                 />
               </div>
               <div className="order-2 lg:order-2 fade-in-up" style={{ animationDelay: '0.4s' }}>
-                <EnhancedResultsDisplay metrics={metrics} isMetric={isMetric} />
+                <EnhancedResultsDisplay 
+                  metrics={metrics} 
+                  isMetric={isMetric} 
+                  onSaveCalculation={metrics ? handleSaveCalculation : undefined}
+                />
               </div>
             </div>
 
