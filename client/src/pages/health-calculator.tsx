@@ -35,26 +35,44 @@ export default function HealthCalculator() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30">
       <div className="container mx-auto px-4 py-6 md:py-12 max-w-7xl">
         {/* Header */}
-        <div className="text-center mb-8 md:mb-12">
-          <h1 className="text-3xl md:text-5xl font-bold text-gray-800 mb-4 flex items-center justify-center">
-            <Activity className="mr-4 h-8 w-8 md:h-12 md:w-12 text-blue-600" />
-            Health Metrics Calculator
-          </h1>
-          <p className="text-gray-600 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
+        <div className="text-center mb-8 md:mb-12 fade-in-up">
+          <div className="floating-element">
+            <h1 className="text-3xl md:text-5xl font-bold text-gray-800 mb-4 flex items-center justify-center">
+              <Activity className="mr-4 h-8 w-8 md:h-12 md:w-12 text-blue-600" />
+              Health Metrics Calculator
+            </h1>
+          </div>
+          <p className="text-gray-600 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed opacity-80">
             Get instant, personalized health insights with professional-grade calculations designed for your wellness journey
           </p>
+          
+          {/* Visual indicators */}
+          <div className="flex justify-center items-center space-x-6 mt-8">
+            <div className="flex items-center space-x-2 text-sm text-gray-500">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              <span>Real-time calculations</span>
+            </div>
+            <div className="flex items-center space-x-2 text-sm text-gray-500">
+              <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+              <span>Professional accuracy</span>
+            </div>
+            <div className="flex items-center space-x-2 text-sm text-gray-500">
+              <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
+              <span>Privacy focused</span>
+            </div>
+          </div>
         </div>
 
         {/* Main Content */}
         <div className="grid lg:grid-cols-2 gap-6 md:gap-8 lg:gap-12">
-          <div className="order-1 lg:order-1">
+          <div className="order-1 lg:order-1 fade-in-up" style={{ animationDelay: '0.2s' }}>
             <InputForm
               onFormChange={handleFormChange}
               isMetric={isMetric}
               onUnitToggle={handleUnitToggle}
             />
           </div>
-          <div className="order-2 lg:order-2">
+          <div className="order-2 lg:order-2 fade-in-up" style={{ animationDelay: '0.4s' }}>
             <ResultsDisplay metrics={metrics} isMetric={isMetric} />
           </div>
         </div>
