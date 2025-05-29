@@ -32,35 +32,39 @@ export default function HealthCalculator() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30">
+      <div className="container mx-auto px-4 py-6 md:py-12 max-w-7xl">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2 flex items-center justify-center">
-            <Activity className="mr-3 h-8 w-8 text-blue-600" />
+        <div className="text-center mb-8 md:mb-12">
+          <h1 className="text-3xl md:text-5xl font-bold text-gray-800 mb-4 flex items-center justify-center">
+            <Activity className="mr-4 h-8 w-8 md:h-12 md:w-12 text-blue-600" />
             Health Metrics Calculator
           </h1>
-          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            Get instant insights into your health metrics with professional-grade calculations
+          <p className="text-gray-600 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
+            Get instant, personalized health insights with professional-grade calculations designed for your wellness journey
           </p>
         </div>
 
         {/* Main Content */}
-        <div className="grid lg:grid-cols-2 gap-8">
-          <InputForm
-            onFormChange={handleFormChange}
-            isMetric={isMetric}
-            onUnitToggle={handleUnitToggle}
-          />
-          <ResultsDisplay metrics={metrics} isMetric={isMetric} />
+        <div className="grid lg:grid-cols-2 gap-6 md:gap-8 lg:gap-12">
+          <div className="order-1 lg:order-1">
+            <InputForm
+              onFormChange={handleFormChange}
+              isMetric={isMetric}
+              onUnitToggle={handleUnitToggle}
+            />
+          </div>
+          <div className="order-2 lg:order-2">
+            <ResultsDisplay metrics={metrics} isMetric={isMetric} />
+          </div>
         </div>
 
         {/* Disclaimer */}
-        <div className="mt-8 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+        <div className="mt-8 md:mt-12 p-4 md:p-6 bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200/60 rounded-2xl shadow-lg backdrop-blur-sm">
           <div className="flex items-start">
-            <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5 mr-3 flex-shrink-0" />
-            <div className="text-sm text-yellow-800">
-              <strong>Medical Disclaimer:</strong> These calculations are for informational purposes only and should not replace professional medical advice. Consult with a healthcare provider for personalized health recommendations.
+            <AlertTriangle className="h-6 w-6 text-yellow-600 mt-0.5 mr-4 flex-shrink-0" />
+            <div className="text-sm md:text-base text-yellow-800 leading-relaxed">
+              <strong className="font-semibold">Medical Disclaimer:</strong> These calculations provide general health insights for informational purposes only. Always consult with a qualified healthcare provider for personalized medical advice, diagnosis, or treatment recommendations.
             </div>
           </div>
         </div>

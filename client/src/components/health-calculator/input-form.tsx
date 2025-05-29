@@ -77,22 +77,25 @@ export function InputForm({ onFormChange, isMetric, onUnitToggle }: InputFormPro
   };
 
   return (
-    <Card className="h-fit">
-      <CardHeader>
-        <CardTitle className="flex items-center text-xl">
-          <UserCheck className="mr-2 h-5 w-5 text-blue-600" />
-          Personal Information
+    <Card className="h-fit glass-card border-0 shadow-2xl">
+      <CardHeader className="pb-4">
+        <CardTitle className="flex items-center text-xl font-semibold">
+          <UserCheck className="mr-3 h-6 w-6 text-blue-600" />
+          Your Information
         </CardTitle>
+        <p className="text-sm text-gray-600 mt-1">Enter your details for personalized health insights</p>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Units Toggle */}
-        <div className="flex justify-center">
-          <div className="bg-gray-100 rounded-lg p-1 flex">
+        <div className="flex justify-center mb-6">
+          <div className="bg-gray-100/80 backdrop-blur-sm rounded-xl p-1.5 flex shadow-inner">
             <Button
               type="button"
               variant={isMetric ? "default" : "ghost"}
               size="sm"
-              className="px-4 py-2 text-sm"
+              className={`px-6 py-2.5 text-sm font-medium rounded-lg apple-button ${
+                isMetric ? 'bg-blue-600 text-white shadow-md' : 'text-gray-600 hover:bg-white/60'
+              }`}
               onClick={() => handleUnitToggle(true)}
             >
               Metric
@@ -101,7 +104,9 @@ export function InputForm({ onFormChange, isMetric, onUnitToggle }: InputFormPro
               type="button"
               variant={!isMetric ? "default" : "ghost"}
               size="sm"
-              className="px-4 py-2 text-sm"
+              className={`px-6 py-2.5 text-sm font-medium rounded-lg apple-button ${
+                !isMetric ? 'bg-blue-600 text-white shadow-md' : 'text-gray-600 hover:bg-white/60'
+              }`}
               onClick={() => handleUnitToggle(false)}
             >
               Imperial
@@ -116,9 +121,9 @@ export function InputForm({ onFormChange, isMetric, onUnitToggle }: InputFormPro
               control={form.control}
               name="age"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <FormLabel>Age (years)</FormLabel>
+                    <FormLabel className="text-sm font-medium text-gray-700">Age</FormLabel>
                     <TooltipInfo content="Enter your age in years. This is used for BMR calculation." />
                   </div>
                   <FormControl>
@@ -127,11 +132,12 @@ export function InputForm({ onFormChange, isMetric, onUnitToggle }: InputFormPro
                       placeholder="25"
                       min="1"
                       max="120"
+                      className="apple-input h-12 text-base rounded-xl border-gray-200/50 bg-white/70 backdrop-blur-sm"
                       {...field}
                       onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
                     />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-xs" />
                 </FormItem>
               )}
             />
@@ -141,27 +147,27 @@ export function InputForm({ onFormChange, isMetric, onUnitToggle }: InputFormPro
               control={form.control}
               name="gender"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Gender</FormLabel>
+                <FormItem className="space-y-3">
+                  <FormLabel className="text-sm font-medium text-gray-700">Gender</FormLabel>
                   <FormControl>
                     <RadioGroup
                       onValueChange={field.onChange}
                       defaultValue={field.value}
-                      className="grid grid-cols-2 gap-4"
+                      className="grid grid-cols-1 sm:grid-cols-2 gap-3"
                     >
-                      <div className="flex items-center space-x-2 border rounded-lg p-3 hover:border-blue-600 transition-colors">
-                        <RadioGroupItem value="male" id="male" />
-                        <Label htmlFor="male" className="flex-1 cursor-pointer">Male</Label>
-                        <Users className="h-4 w-4 text-blue-500" />
+                      <div className="flex items-center space-x-3 border border-gray-200/50 rounded-xl p-4 hover:border-blue-400 hover:bg-blue-50/30 transition-all duration-200 cursor-pointer bg-white/70 backdrop-blur-sm apple-button">
+                        <RadioGroupItem value="male" id="male" className="border-2" />
+                        <Label htmlFor="male" className="flex-1 cursor-pointer font-medium">Male</Label>
+                        <Users className="h-5 w-5 text-blue-500" />
                       </div>
-                      <div className="flex items-center space-x-2 border rounded-lg p-3 hover:border-blue-600 transition-colors">
-                        <RadioGroupItem value="female" id="female" />
-                        <Label htmlFor="female" className="flex-1 cursor-pointer">Female</Label>
-                        <Users className="h-4 w-4 text-pink-500" />
+                      <div className="flex items-center space-x-3 border border-gray-200/50 rounded-xl p-4 hover:border-pink-400 hover:bg-pink-50/30 transition-all duration-200 cursor-pointer bg-white/70 backdrop-blur-sm apple-button">
+                        <RadioGroupItem value="female" id="female" className="border-2" />
+                        <Label htmlFor="female" className="flex-1 cursor-pointer font-medium">Female</Label>
+                        <Users className="h-5 w-5 text-pink-500" />
                       </div>
                     </RadioGroup>
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-xs" />
                 </FormItem>
               )}
             />
@@ -171,9 +177,9 @@ export function InputForm({ onFormChange, isMetric, onUnitToggle }: InputFormPro
               control={form.control}
               name="height"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <FormLabel>Height ({isMetric ? 'cm' : 'ft'})</FormLabel>
+                    <FormLabel className="text-sm font-medium text-gray-700">Height ({isMetric ? 'cm' : 'ft'})</FormLabel>
                     <TooltipInfo content="Enter your height. Used for BMI and BMR calculations." />
                   </div>
                   <FormControl>
@@ -181,11 +187,12 @@ export function InputForm({ onFormChange, isMetric, onUnitToggle }: InputFormPro
                       type="number"
                       placeholder={isMetric ? "170" : "5.7"}
                       step="0.1"
+                      className="apple-input h-12 text-base rounded-xl border-gray-200/50 bg-white/70 backdrop-blur-sm"
                       {...field}
                       onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
                     />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-xs" />
                 </FormItem>
               )}
             />
@@ -195,9 +202,9 @@ export function InputForm({ onFormChange, isMetric, onUnitToggle }: InputFormPro
               control={form.control}
               name="weight"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <FormLabel>Weight ({isMetric ? 'kg' : 'lbs'})</FormLabel>
+                    <FormLabel className="text-sm font-medium text-gray-700">Weight ({isMetric ? 'kg' : 'lbs'})</FormLabel>
                     <TooltipInfo content="Enter your current weight. Used for all calculations." />
                   </div>
                   <FormControl>
@@ -205,11 +212,12 @@ export function InputForm({ onFormChange, isMetric, onUnitToggle }: InputFormPro
                       type="number"
                       placeholder={isMetric ? "70" : "154"}
                       step="0.1"
+                      className="apple-input h-12 text-base rounded-xl border-gray-200/50 bg-white/70 backdrop-blur-sm"
                       {...field}
                       onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
                     />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-xs" />
                 </FormItem>
               )}
             />
@@ -219,26 +227,26 @@ export function InputForm({ onFormChange, isMetric, onUnitToggle }: InputFormPro
               control={form.control}
               name="activityLevel"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <FormLabel>Activity Level</FormLabel>
+                    <FormLabel className="text-sm font-medium text-gray-700">Activity Level</FormLabel>
                     <TooltipInfo content="Select your typical activity level. This affects your daily calorie needs calculation." />
                   </div>
                   <Select onValueChange={(value) => field.onChange(parseFloat(value))} defaultValue={field.value?.toString()}>
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select activity level" />
+                      <SelectTrigger className="h-12 text-base rounded-xl border-gray-200/50 bg-white/70 backdrop-blur-sm apple-input">
+                        <SelectValue placeholder="Select your activity level" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent>
-                      <SelectItem value="1.2">Sedentary (little to no exercise)</SelectItem>
-                      <SelectItem value="1.375">Lightly active (light exercise 1-3 days/week)</SelectItem>
-                      <SelectItem value="1.55">Moderately active (moderate exercise 3-5 days/week)</SelectItem>
-                      <SelectItem value="1.725">Very active (hard exercise 6-7 days/week)</SelectItem>
-                      <SelectItem value="1.9">Extremely active (very hard exercise, physical job)</SelectItem>
+                    <SelectContent className="rounded-xl border-gray-200/50 bg-white/95 backdrop-blur-sm">
+                      <SelectItem value="1.2" className="rounded-lg py-3">🪑 Sedentary (little to no exercise)</SelectItem>
+                      <SelectItem value="1.375" className="rounded-lg py-3">🚶 Lightly active (light exercise 1-3 days/week)</SelectItem>
+                      <SelectItem value="1.55" className="rounded-lg py-3">🏃 Moderately active (moderate exercise 3-5 days/week)</SelectItem>
+                      <SelectItem value="1.725" className="rounded-lg py-3">💪 Very active (hard exercise 6-7 days/week)</SelectItem>
+                      <SelectItem value="1.9" className="rounded-lg py-3">🔥 Extremely active (very hard exercise, physical job)</SelectItem>
                     </SelectContent>
                   </Select>
-                  <FormMessage />
+                  <FormMessage className="text-xs" />
                 </FormItem>
               )}
             />
