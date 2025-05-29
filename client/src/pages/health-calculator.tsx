@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
-import { InputForm, FormData } from "@/components/health-calculator/input-form";
-import { ResultsDisplay } from "@/components/health-calculator/results-display";
+import { EnhancedInputForm, FormData } from "@/components/enhanced-input-form";
+import { EnhancedResultsDisplay } from "@/components/enhanced-results-display";
 import { BottomNav } from "@/components/bottom-nav";
 import { TrendsChart } from "@/components/trends-chart";
 import { HistoryView } from "@/components/history-view";
@@ -9,7 +9,7 @@ import { calculateHealthMetrics, HealthMetrics } from "@/lib/health-calculations
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { HealthEntry, HealthSession } from "@/lib/health-data";
 import { useToast } from "@/hooks/use-toast";
-import { Activity, AlertTriangle } from "lucide-react";
+import { Activity, AlertTriangle, Sparkles } from "lucide-react";
 
 export default function HealthCalculator() {
   const [isMetric, setIsMetric] = useState(true);
@@ -170,14 +170,14 @@ export default function HealthCalculator() {
             {/* Main Content */}
             <div className="grid lg:grid-cols-2 gap-6 md:gap-8 lg:gap-12">
               <div className="order-1 lg:order-1 fade-in-up" style={{ animationDelay: '0.2s' }}>
-                <InputForm
+                <EnhancedInputForm
                   onFormChange={handleFormChange}
                   isMetric={isMetric}
                   onUnitToggle={handleUnitToggle}
                 />
               </div>
               <div className="order-2 lg:order-2 fade-in-up" style={{ animationDelay: '0.4s' }}>
-                <ResultsDisplay metrics={metrics} isMetric={isMetric} />
+                <EnhancedResultsDisplay metrics={metrics} isMetric={isMetric} />
               </div>
             </div>
 
@@ -198,33 +198,46 @@ export default function HealthCalculator() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30 pb-20 md:pb-8">
       <div className="container mx-auto px-4 py-6 md:py-12 max-w-7xl">
-        {/* Header - Hidden on mobile when not on calculator tab */}
+        {/* Enhanced Header with dynamic content */}
         <div className={`text-center mb-8 md:mb-12 fade-in-up ${activeTab !== 'calculator' ? 'hidden md:block' : ''}`}>
           <div className="floating-element">
             <h1 className="text-3xl md:text-5xl font-bold text-gray-800 mb-4 flex items-center justify-center">
-              <Activity className="mr-4 h-8 w-8 md:h-12 md:w-12 text-blue-600" />
-              Health Metrics Calculator
+              <Activity className="mr-4 h-8 w-8 md:h-12 md:w-12 text-blue-600 breathe" />
+              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                Health Metrics Calculator
+              </span>
+              <Sparkles className="ml-2 h-6 w-6 text-yellow-500 animate-pulse" />
             </h1>
           </div>
           <p className="text-gray-600 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed opacity-80">
             Get instant, personalized health insights with professional-grade calculations designed for your wellness journey
           </p>
           
-          {/* Visual indicators */}
+          {/* Enhanced visual indicators with progress */}
           <div className="flex flex-wrap justify-center items-center gap-4 md:gap-6 mt-8">
-            <div className="flex items-center space-x-2 text-xs md:text-sm text-gray-500">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            <div className="flex items-center space-x-2 text-xs md:text-sm text-gray-500 apple-button glow-effect p-2 rounded-lg">
+              <div className="w-2 h-2 bg-green-500 rounded-full status-indicator"></div>
               <span>Real-time calculations</span>
             </div>
-            <div className="flex items-center space-x-2 text-xs md:text-sm text-gray-500">
-              <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+            <div className="flex items-center space-x-2 text-xs md:text-sm text-gray-500 apple-button glow-effect p-2 rounded-lg">
+              <div className="w-2 h-2 bg-blue-500 rounded-full status-indicator"></div>
               <span>Professional accuracy</span>
             </div>
-            <div className="flex items-center space-x-2 text-xs md:text-sm text-gray-500">
-              <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
+            <div className="flex items-center space-x-2 text-xs md:text-sm text-gray-500 apple-button glow-effect p-2 rounded-lg">
+              <div className="w-2 h-2 bg-purple-500 rounded-full status-indicator"></div>
               <span>Privacy focused</span>
             </div>
           </div>
+
+          {/* Session stats for returning users */}
+          {healthSession.entries.length > 0 && (
+            <div className="mt-6 inline-flex items-center space-x-2 bg-blue-50/50 backdrop-blur-sm rounded-full px-4 py-2 border border-blue-200/50">
+              <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+              <span className="text-sm text-blue-700 font-medium">
+                {healthSession.entries.length} calculation{healthSession.entries.length === 1 ? '' : 's'} saved
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Mobile Tab Header */}

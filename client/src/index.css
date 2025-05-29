@@ -93,6 +93,18 @@
   
   .apple-button {
     @apply transform transition-all duration-200 ease-out active:scale-95 hover:shadow-lg;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  
+  .apple-button:active {
+    animation: hapticFeedback 0.1s ease-out;
+  }
+  
+  @keyframes hapticFeedback {
+    0% { transform: scale(1); }
+    50% { transform: scale(0.97); }
+    100% { transform: scale(0.95); }
   }
   
   .apple-input {
@@ -218,5 +230,99 @@
   @keyframes shimmer {
     0% { background-position: -200% 0; }
     100% { background-position: 200% 0; }
+  }
+  
+  .elastic-bounce {
+    animation: elasticBounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+  
+  @keyframes elasticBounce {
+    0% { transform: scale(0) rotate(45deg); opacity: 0; }
+    50% { transform: scale(1.2) rotate(0deg); opacity: 1; }
+    100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  }
+  
+  .slide-in-right {
+    animation: slideInRight 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  
+  @keyframes slideInRight {
+    0% { transform: translateX(100%); opacity: 0; }
+    100% { transform: translateX(0); opacity: 1; }
+  }
+  
+  .slide-in-left {
+    animation: slideInLeft 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  
+  @keyframes slideInLeft {
+    0% { transform: translateX(-100%); opacity: 0; }
+    100% { transform: translateX(0); opacity: 1; }
+  }
+  
+  .breathe {
+    animation: breathe 4s ease-in-out infinite;
+  }
+  
+  @keyframes breathe {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+  
+  .glow-effect {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .glow-effect::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.5s;
+  }
+  
+  .glow-effect:hover::before {
+    left: 100%;
+  }
+  
+  .card-hover-lift {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .card-hover-lift:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.5);
+  }
+  
+  .progress-ring {
+    transform: rotate(-90deg);
+    transition: stroke-dasharray 0.3s ease-in-out;
+  }
+  
+  .status-indicator {
+    position: relative;
+  }
+  
+  .status-indicator::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background: inherit;
+    border-radius: inherit;
+    transform: translate(-50%, -50%);
+    animation: statusPulse 2s infinite;
+    opacity: 0.6;
+  }
+  
+  @keyframes statusPulse {
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+    100% { transform: translate(-50%, -50%) scale(1.8); opacity: 0; }
   }
 }
