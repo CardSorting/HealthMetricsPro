@@ -43,14 +43,20 @@ export function TrendsChart({ entries, isMetric }: TrendsChartProps) {
     );
   }
 
-  const chartData = entries.map((entry, index) => ({
-    index: index + 1,
-    date: new Date(entry.date).toLocaleDateString(),
-    weight: isMetric ? entry.weight : entry.weight * 2.20462,
-    bmi: entry.metrics.bmi,
-    bmr: entry.metrics.bmr,
-    calories: entry.metrics.dailyCalories,
-  }));
+  const chartData = entries.map((entry, index) => {
+    const date = new Date(entry.date);
+    return {
+      index: index + 1,
+      date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      fullDate: date.toLocaleDateString(),
+      weight: isMetric ? entry.weight : entry.weight * 2.20462,
+      bmi: entry.metrics.bmi,
+      bmr: entry.metrics.bmr,
+      calories: entry.metrics.dailyCalories,
+      weightRounded: Math.round((isMetric ? entry.weight : entry.weight * 2.20462) * 10) / 10,
+      bmiRounded: Math.round(entry.metrics.bmi * 10) / 10,
+    };
+  });
 
   const getWeightTrend = () => {
     if (entries.length < 2) return { trend: 'stable', value: 0 };
@@ -227,68 +233,113 @@ export function TrendsChart({ entries, isMetric }: TrendsChartProps) {
         </Card>
       </div>
 
-      {/* Main Chart */}
-      <Card className="glass-card border-0 shadow-xl">
+      {/* Apple Health-style Visual Progress */}
+      <Card className="glass-card border-0 shadow-xl bg-gradient-to-br from-white/90 to-gray-50/50">
         <CardHeader className="pb-4">
           <CardTitle className="text-lg font-bold flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <config.icon className="h-5 w-5" style={{ color: config.color }} />
               <span>{config.title} Progress</span>
             </div>
-            <span className="text-xs text-gray-500">{entries.length} entries</span>
+            <span className="text-xs text-gray-500">{entries.length} data points</span>
           </CardTitle>
         </CardHeader>
         <CardContent className="pb-6">
-          <ResponsiveContainer width="100%" height={280}>
-            <AreaChart data={chartData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
+          {/* Simple Progress Bars for each entry */}
+          <div className="space-y-3 mb-6">
+            {chartData.slice(-5).map((data, index) => {
+              const value = data[config.dataKey as keyof typeof data] as number;
+              const maxValue = Math.max(...chartData.map(d => d[config.dataKey as keyof typeof d] as number));
+              const minValue = Math.min(...chartData.map(d => d[config.dataKey as keyof typeof d] as number));
+              const percentage = ((value - minValue) / (maxValue - minValue)) * 100 || 50;
+              
+              return (
+                <div key={index} className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600 font-medium">{data.date}</span>
+                    <span className="text-sm font-bold" style={{ color: config.color }}>
+                      {value.toFixed(selectedMetric === 'weight' ? 1 : 0)} {config.unit}
+                    </span>
+                  </div>
+                  <div className="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
+                    <div 
+                      className="h-2.5 rounded-full transition-all duration-700 ease-out"
+                      style={{ 
+                        width: `${percentage}%`,
+                        background: `linear-gradient(90deg, ${config.color}40, ${config.color})`
+                      }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Simplified Chart */}
+          <ResponsiveContainer width="100%" height={200}>
+            <LineChart data={chartData} margin={{ top: 10, right: 10, left: 10, bottom: 10 }}>
               <defs>
                 <linearGradient id={`${selectedMetric}Gradient`} x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor={config.color} stopOpacity={0.4}/>
-                  <stop offset="95%" stopColor={config.color} stopOpacity={0.05}/>
+                  <stop offset="5%" stopColor={config.color} stopOpacity={0.3}/>
+                  <stop offset="95%" stopColor={config.color} stopOpacity={0}/>
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" strokeOpacity={0.5} />
               <XAxis 
-                dataKey="index" 
+                dataKey="date" 
                 axisLine={false}
                 tickLine={false}
-                tick={{ fontSize: 11, fill: '#6B7280' }}
-                label={{ value: 'Entry', position: 'insideBottom', offset: -5, fontSize: 10, fill: '#9CA3AF' }}
+                tick={{ fontSize: 10, fill: '#9CA3AF' }}
+                interval="preserveStartEnd"
               />
-              <YAxis 
-                axisLine={false}
-                tickLine={false}
-                tick={{ fontSize: 11, fill: '#6B7280' }}
-                domain={['dataMin - 2', 'dataMax + 2']}
-              />
+              <YAxis hide />
               <Tooltip 
                 contentStyle={{ 
                   backgroundColor: 'rgba(255, 255, 255, 0.98)',
                   border: 'none',
-                  borderRadius: '16px',
-                  boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-                  padding: '12px 16px'
+                  borderRadius: '12px',
+                  boxShadow: '0 10px 25px rgba(0, 0, 0, 0.15)',
+                  padding: '8px 12px'
                 }}
-                labelStyle={{ color: '#374151', fontSize: '12px', fontWeight: '500' }}
-                formatter={(value: any, name: string) => [
-                  `${value.toFixed(1)} ${config.unit}`,
+                labelStyle={{ color: '#374151', fontSize: '11px', fontWeight: '600' }}
+                formatter={(value: any) => [
+                  `${value.toFixed(selectedMetric === 'weight' ? 1 : 0)} ${config.unit}`,
                   config.title
                 ]}
-                labelFormatter={(label) => `Entry ${label}`}
               />
-              <Area 
+              <Line 
                 type="monotone" 
                 dataKey={config.dataKey}
                 stroke={config.color} 
-                strokeWidth={3}
-                fill={`url(#${selectedMetric}Gradient)`}
-                dot={{ fill: config.color, strokeWidth: 2, r: 4 }}
-                activeDot={{ r: 6, stroke: config.color, strokeWidth: 2, fill: 'white' }}
+                strokeWidth={4}
+                dot={{ fill: config.color, strokeWidth: 0, r: 5 }}
+                activeDot={{ r: 7, stroke: config.color, strokeWidth: 3, fill: 'white' }}
               />
-            </AreaChart>
+            </LineChart>
           </ResponsiveContainer>
         </CardContent>
       </Card>
+
+      {/* Data Points Cards */}
+      <div className="grid grid-cols-2 gap-4">
+        {chartData.slice(-4).map((data, index) => (
+          <Card key={index} className="glass-card border-0 shadow-lg bg-gradient-to-br from-white/80 to-blue-50/20">
+            <CardContent className="p-4 text-center">
+              <div className="space-y-2">
+                <p className="text-xs text-gray-500 font-medium">{data.date}</p>
+                <div className="flex items-center justify-center space-x-1">
+                  <span className="text-lg font-bold" style={{ color: config.color }}>
+                    {(data[config.dataKey as keyof typeof data] as number).toFixed(selectedMetric === 'weight' ? 1 : 0)}
+                  </span>
+                  <span className="text-xs text-gray-500">{config.unit}</span>
+                </div>
+                {index === chartData.length - 1 && (
+                  <div className="w-2 h-2 bg-green-500 rounded-full mx-auto animate-pulse" />
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
 
       {/* Data Summary */}
       <Card className="glass-card border-0 shadow-lg bg-gradient-to-r from-gray-50/80 to-blue-50/50">
