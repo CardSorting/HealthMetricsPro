@@ -175,4 +175,30 @@
       transform: scale(1);
     }
   }
+  
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  .nav-bounce {
+    animation: navBounce 0.4s ease-out;
+  }
+  
+  @keyframes navBounce {
+    0% { transform: translateY(100%); }
+    60% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
+  }
+  
+  .tab-indicator {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .mobile-nav-shadow {
+    box-shadow: 0 -10px 25px -5px rgba(0, 0, 0, 0.1), 0 -10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+  
+  .page-container {
+    padding-bottom: 80px; /* Space for mobile nav */
+  }
 }
