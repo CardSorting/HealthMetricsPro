@@ -1,7 +1,14 @@
 import React, { useState, useCallback } from "react";
 import { InputForm, FormData } from "@/components/health-calculator/input-form";
 import { ResultsDisplay } from "@/components/health-calculator/results-display";
+import { BottomNav } from "@/components/bottom-nav";
+import { TrendsChart } from "@/components/trends-chart";
+import { HistoryView } from "@/components/history-view";
+import { SettingsView } from "@/components/settings-view";
 import { calculateHealthMetrics, HealthMetrics } from "@/lib/health-calculations";
+import { useLocalStorage } from "@/hooks/use-local-storage";
+import { HealthEntry, HealthSession } from "@/lib/health-data";
+import { useToast } from "@/hooks/use-toast";
 import { Activity, AlertTriangle } from "lucide-react";
 
 export default function HealthCalculator() {
