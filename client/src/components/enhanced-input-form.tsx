@@ -353,50 +353,38 @@ export function EnhancedInputForm({ onFormChange, isMetric, onUnitToggle }: Enha
                     </FormLabel>
                     <TooltipInfo content="Select your typical activity level. This affects your daily calorie needs calculation." />
                   </div>
-                  <Select 
-                    onValueChange={(value) => field.onChange(parseFloat(value))} 
-                    value={field.value?.toString() || "1.375"}
-                  >
-                    <FormControl>
-                      <SelectTrigger className={`h-12 text-base rounded-xl border-gray-200/50 bg-white/70 backdrop-blur-sm apple-input transition-all duration-300 ${
-                        completedFields.has('activityLevel') ? 'border-green-300 bg-green-50/30' : ''
-                      }`}>
-                        <SelectValue placeholder="Select your activity level" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent className="rounded-xl border-gray-200/50 bg-white/95 backdrop-blur-sm">
-                      <SelectItem value="1.2" className="rounded-lg py-3 hover:bg-blue-50 transition-colors duration-200">
-                        <div className="flex flex-col">
-                          <span className="font-medium">🪑 Sedentary</span>
-                          <span className="text-xs text-gray-500">Little to no exercise</span>
+                  <FormControl>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {[
+                        { value: 1.2, emoji: "🪑", label: "Sedentary", desc: "Little to no exercise" },
+                        { value: 1.375, emoji: "🚶", label: "Lightly active", desc: "Light exercise 1-3 days/week" },
+                        { value: 1.55, emoji: "🏃", label: "Moderately active", desc: "Moderate exercise 3-5 days/week" },
+                        { value: 1.725, emoji: "💪", label: "Very active", desc: "Hard exercise 6-7 days/week" },
+                        { value: 1.9, emoji: "🔥", label: "Extremely active", desc: "Very hard exercise, physical job" }
+                      ].map((option) => (
+                        <div
+                          key={option.value}
+                          onClick={() => field.onChange(option.value)}
+                          className={`p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 apple-button ${
+                            field.value === option.value
+                              ? 'border-blue-500 bg-blue-50/50 shadow-lg scale-[0.98]'
+                              : 'border-gray-200/50 bg-white/70 hover:border-blue-300 hover:bg-blue-50/30 hover:shadow-md'
+                          } backdrop-blur-sm`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <span className="text-2xl">{option.emoji}</span>
+                            <div className="flex-1">
+                              <div className="font-medium text-gray-800">{option.label}</div>
+                              <div className="text-xs text-gray-500 mt-1">{option.desc}</div>
+                            </div>
+                            {field.value === option.value && (
+                              <div className="h-3 w-3 bg-blue-500 rounded-full animate-pulse"></div>
+                            )}
+                          </div>
                         </div>
-                      </SelectItem>
-                      <SelectItem value="1.375" className="rounded-lg py-3 hover:bg-blue-50 transition-colors duration-200">
-                        <div className="flex flex-col">
-                          <span className="font-medium">🚶 Lightly active</span>
-                          <span className="text-xs text-gray-500">Light exercise 1-3 days/week</span>
-                        </div>
-                      </SelectItem>
-                      <SelectItem value="1.55" className="rounded-lg py-3 hover:bg-blue-50 transition-colors duration-200">
-                        <div className="flex flex-col">
-                          <span className="font-medium">🏃 Moderately active</span>
-                          <span className="text-xs text-gray-500">Moderate exercise 3-5 days/week</span>
-                        </div>
-                      </SelectItem>
-                      <SelectItem value="1.725" className="rounded-lg py-3 hover:bg-blue-50 transition-colors duration-200">
-                        <div className="flex flex-col">
-                          <span className="font-medium">💪 Very active</span>
-                          <span className="text-xs text-gray-500">Hard exercise 6-7 days/week</span>
-                        </div>
-                      </SelectItem>
-                      <SelectItem value="1.9" className="rounded-lg py-3 hover:bg-blue-50 transition-colors duration-200">
-                        <div className="flex flex-col">
-                          <span className="font-medium">🔥 Extremely active</span>
-                          <span className="text-xs text-gray-500">Very hard exercise, physical job</span>
-                        </div>
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
+                      ))}
+                    </div>
+                  </FormControl>
                   <FormMessage className="text-xs" />
                 </FormItem>
               )}
