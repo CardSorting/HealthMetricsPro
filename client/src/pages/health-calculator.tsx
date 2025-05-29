@@ -47,16 +47,16 @@ export default function HealthCalculator() {
           </p>
           
           {/* Visual indicators */}
-          <div className="flex justify-center items-center space-x-6 mt-8">
-            <div className="flex items-center space-x-2 text-sm text-gray-500">
+          <div className="flex flex-wrap justify-center items-center gap-4 md:gap-6 mt-8">
+            <div className="flex items-center space-x-2 text-xs md:text-sm text-gray-500">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
               <span>Real-time calculations</span>
             </div>
-            <div className="flex items-center space-x-2 text-sm text-gray-500">
+            <div className="flex items-center space-x-2 text-xs md:text-sm text-gray-500">
               <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
               <span>Professional accuracy</span>
             </div>
-            <div className="flex items-center space-x-2 text-sm text-gray-500">
+            <div className="flex items-center space-x-2 text-xs md:text-sm text-gray-500">
               <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
               <span>Privacy focused</span>
             </div>
