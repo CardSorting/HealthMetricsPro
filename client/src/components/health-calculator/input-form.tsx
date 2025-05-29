@@ -134,6 +134,7 @@ export function InputForm({ onFormChange, isMetric, onUnitToggle }: InputFormPro
                       max="120"
                       className="apple-input h-12 text-base rounded-xl border-gray-200/50 bg-white/70 backdrop-blur-sm"
                       {...field}
+                      value={field.value || ""}
                       onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
                     />
                   </FormControl>
@@ -189,6 +190,7 @@ export function InputForm({ onFormChange, isMetric, onUnitToggle }: InputFormPro
                       step="0.1"
                       className="apple-input h-12 text-base rounded-xl border-gray-200/50 bg-white/70 backdrop-blur-sm"
                       {...field}
+                      value={field.value || ""}
                       onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
                     />
                   </FormControl>
@@ -214,6 +216,7 @@ export function InputForm({ onFormChange, isMetric, onUnitToggle }: InputFormPro
                       step="0.1"
                       className="apple-input h-12 text-base rounded-xl border-gray-200/50 bg-white/70 backdrop-blur-sm"
                       {...field}
+                      value={field.value || ""}
                       onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
                     />
                   </FormControl>
