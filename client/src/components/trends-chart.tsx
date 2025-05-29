@@ -179,167 +179,106 @@ export function TrendsChart({ entries, isMetric }: TrendsChartProps) {
         ))}
       </div>
 
-      {/* Current Value Card */}
-      <Card className="glass-card border-0 shadow-xl bg-gradient-to-br from-white/80 to-blue-50/30">
+
+
+      {/* Clear Value Display */}
+      <Card className="border-0 shadow-lg bg-white">
         <CardContent className="p-6">
-          <div className="text-center space-y-2">
-            <p className="text-sm text-gray-500 font-medium">{config.title}</p>
-            <div className="flex items-center justify-center space-x-2">
-              <span className="text-3xl font-bold" style={{ color: config.color }}>
-                {currentValue.toFixed(selectedMetric === 'weight' ? 1 : 0)}
-              </span>
-              <span className="text-lg text-gray-500">{config.unit}</span>
+          <div className="text-center space-y-4">
+            <h3 className="text-lg font-semibold text-gray-800">
+              Your {config.title}
+            </h3>
+            <div className="text-4xl font-bold" style={{ color: config.color }}>
+              {currentValue.toFixed(selectedMetric === 'weight' ? 1 : 0)}
+              <span className="text-lg text-gray-500 ml-2">{config.unit}</span>
             </div>
-            <div className="flex items-center justify-center space-x-2 text-sm">
-              <TrendIcon trend={selectedMetric === 'weight' ? weightTrend.trend : bmiTrend.trend} />
-              <span className="text-gray-600">
-                {selectedMetric === 'weight' ? weightTrend.value.toFixed(1) : bmiTrend.value.toFixed(1)} since start
-              </span>
-            </div>
+            {entries.length > 1 && (
+              <div className="flex items-center justify-center space-x-2 text-sm text-gray-600">
+                <TrendIcon trend={selectedMetric === 'weight' ? weightTrend.trend : bmiTrend.trend} />
+                <span>
+                  {selectedMetric === 'weight' ? weightTrend.value.toFixed(1) : bmiTrend.value.toFixed(1)} 
+                  {' '}{config.unit} change
+                </span>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
 
-      {/* Summary Stats */}
-      <div className="grid grid-cols-2 gap-4">
-        <Card className="glass-card border-0 shadow-lg bg-gradient-to-br from-blue-50/50 to-blue-100/30">
-          <CardContent className="p-4">
-            <div className="text-center">
-              <Scale className="h-6 w-6 text-blue-600 mx-auto mb-2" />
-              <p className="text-xs text-gray-500 mb-1">Weight Change</p>
-              <div className="flex items-center justify-center space-x-1">
-                <TrendIcon trend={weightTrend.trend} />
-                <span className="text-sm font-bold text-gray-800">
-                  {weightTrend.value.toFixed(1)} {isMetric ? 'kg' : 'lbs'}
-                </span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="glass-card border-0 shadow-lg bg-gradient-to-br from-green-50/50 to-green-100/30">
-          <CardContent className="p-4">
-            <div className="text-center">
-              <Target className="h-6 w-6 text-green-600 mx-auto mb-2" />
-              <p className="text-xs text-gray-500 mb-1">BMI Change</p>
-              <div className="flex items-center justify-center space-x-1">
-                <TrendIcon trend={bmiTrend.trend} />
-                <span className="text-sm font-bold text-gray-800">
-                  {bmiTrend.value.toFixed(1)}
-                </span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Apple Health-style Visual Progress */}
-      <Card className="glass-card border-0 shadow-xl bg-gradient-to-br from-white/90 to-gray-50/50">
-        <CardHeader className="pb-4">
-          <CardTitle className="text-lg font-bold flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <config.icon className="h-5 w-5" style={{ color: config.color }} />
-              <span>{config.title} Progress</span>
-            </div>
-            <span className="text-xs text-gray-500">{entries.length} data points</span>
+      {/* Simple Data List */}
+      <Card className="border-0 shadow-lg bg-white">
+        <CardHeader>
+          <CardTitle className="text-base font-semibold flex items-center">
+            Recent Entries
           </CardTitle>
         </CardHeader>
-        <CardContent className="pb-6">
-          {/* Simple Progress Bars for each entry */}
-          <div className="space-y-3 mb-6">
-            {chartData.slice(-5).map((data, index) => {
+        <CardContent className="p-0">
+          <div className="divide-y divide-gray-100">
+            {chartData.slice(-5).reverse().map((data, index) => {
               const value = data[config.dataKey as keyof typeof data] as number;
-              const maxValue = Math.max(...chartData.map(d => d[config.dataKey as keyof typeof d] as number));
-              const minValue = Math.min(...chartData.map(d => d[config.dataKey as keyof typeof d] as number));
-              const percentage = ((value - minValue) / (maxValue - minValue)) * 100 || 50;
+              const isLatest = index === 0;
               
               return (
-                <div key={index} className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600 font-medium">{data.date}</span>
-                    <span className="text-sm font-bold" style={{ color: config.color }}>
-                      {value.toFixed(selectedMetric === 'weight' ? 1 : 0)} {config.unit}
-                    </span>
+                <div key={index} className={`p-4 flex justify-between items-center ${isLatest ? 'bg-blue-50' : ''}`}>
+                  <div>
+                    <p className="font-medium text-gray-900">{data.date}</p>
+                    {isLatest && <p className="text-xs text-blue-600">Latest</p>}
                   </div>
-                  <div className="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
-                    <div 
-                      className="h-2.5 rounded-full transition-all duration-700 ease-out"
-                      style={{ 
-                        width: `${percentage}%`,
-                        background: `linear-gradient(90deg, ${config.color}40, ${config.color})`
-                      }}
-                    />
+                  <div className="text-right">
+                    <p className="font-bold text-lg" style={{ color: config.color }}>
+                      {value.toFixed(selectedMetric === 'weight' ? 1 : 0)}
+                    </p>
+                    <p className="text-xs text-gray-500">{config.unit}</p>
                   </div>
                 </div>
               );
             })}
           </div>
-
-          {/* Simplified Chart */}
-          <ResponsiveContainer width="100%" height={200}>
-            <LineChart data={chartData} margin={{ top: 10, right: 10, left: 10, bottom: 10 }}>
-              <defs>
-                <linearGradient id={`${selectedMetric}Gradient`} x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor={config.color} stopOpacity={0.3}/>
-                  <stop offset="95%" stopColor={config.color} stopOpacity={0}/>
-                </linearGradient>
-              </defs>
-              <XAxis 
-                dataKey="date" 
-                axisLine={false}
-                tickLine={false}
-                tick={{ fontSize: 10, fill: '#9CA3AF' }}
-                interval="preserveStartEnd"
-              />
-              <YAxis hide />
-              <Tooltip 
-                contentStyle={{ 
-                  backgroundColor: 'rgba(255, 255, 255, 0.98)',
-                  border: 'none',
-                  borderRadius: '12px',
-                  boxShadow: '0 10px 25px rgba(0, 0, 0, 0.15)',
-                  padding: '8px 12px'
-                }}
-                labelStyle={{ color: '#374151', fontSize: '11px', fontWeight: '600' }}
-                formatter={(value: any) => [
-                  `${value.toFixed(selectedMetric === 'weight' ? 1 : 0)} ${config.unit}`,
-                  config.title
-                ]}
-              />
-              <Line 
-                type="monotone" 
-                dataKey={config.dataKey}
-                stroke={config.color} 
-                strokeWidth={4}
-                dot={{ fill: config.color, strokeWidth: 0, r: 5 }}
-                activeDot={{ r: 7, stroke: config.color, strokeWidth: 3, fill: 'white' }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
         </CardContent>
       </Card>
 
-      {/* Data Points Cards */}
-      <div className="grid grid-cols-2 gap-4">
-        {chartData.slice(-4).map((data, index) => (
-          <Card key={index} className="glass-card border-0 shadow-lg bg-gradient-to-br from-white/80 to-blue-50/20">
-            <CardContent className="p-4 text-center">
-              <div className="space-y-2">
-                <p className="text-xs text-gray-500 font-medium">{data.date}</p>
-                <div className="flex items-center justify-center space-x-1">
-                  <span className="text-lg font-bold" style={{ color: config.color }}>
-                    {(data[config.dataKey as keyof typeof data] as number).toFixed(selectedMetric === 'weight' ? 1 : 0)}
-                  </span>
-                  <span className="text-xs text-gray-500">{config.unit}</span>
-                </div>
-                {index === chartData.length - 1 && (
-                  <div className="w-2 h-2 bg-green-500 rounded-full mx-auto animate-pulse" />
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      {/* Minimal Chart */}
+      {entries.length > 1 && (
+        <Card className="border-0 shadow-lg bg-white">
+          <CardHeader>
+            <CardTitle className="text-base font-semibold">Progress Over Time</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={150}>
+              <LineChart data={chartData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
+                <XAxis 
+                  dataKey="date" 
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fontSize: 11, fill: '#6B7280' }}
+                  interval="preserveStartEnd"
+                />
+                <YAxis hide />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: 'white',
+                    border: '1px solid #E5E7EB',
+                    borderRadius: '8px',
+                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                  }}
+                  formatter={(value: any) => [
+                    `${value.toFixed(selectedMetric === 'weight' ? 1 : 0)} ${config.unit}`,
+                    config.title
+                  ]}
+                />
+                <Line 
+                  type="monotone" 
+                  dataKey={config.dataKey}
+                  stroke={config.color} 
+                  strokeWidth={3}
+                  dot={{ fill: config.color, strokeWidth: 0, r: 4 }}
+                  activeDot={{ r: 6, stroke: config.color, strokeWidth: 2, fill: 'white' }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Data Summary */}
       <Card className="glass-card border-0 shadow-lg bg-gradient-to-r from-gray-50/80 to-blue-50/50">
