@@ -36,9 +36,9 @@ export function EnhancedInputForm({ onFormChange, isMetric, onUnitToggle }: Enha
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      age: undefined,
-      height: undefined,
-      weight: undefined,
+      age: 0,
+      height: 0,
+      weight: 0,
       gender: undefined,
       activityLevel: 1.375,
     },
@@ -53,9 +53,9 @@ export function EnhancedInputForm({ onFormChange, isMetric, onUnitToggle }: Enha
     const values = getValues();
     const completed = new Set<string>();
     
-    if (values.age) completed.add('age');
-    if (values.height) completed.add('height');
-    if (values.weight) completed.add('weight');
+    if (values.age && values.age > 0) completed.add('age');
+    if (values.height && values.height > 0) completed.add('height');
+    if (values.weight && values.weight > 0) completed.add('weight');
     if (values.gender) completed.add('gender');
     if (values.activityLevel) completed.add('activityLevel');
     
@@ -65,7 +65,7 @@ export function EnhancedInputForm({ onFormChange, isMetric, onUnitToggle }: Enha
   // Trigger form change when values update
   React.useEffect(() => {
     const values = getValues();
-    if (values.age && values.height && values.weight && values.gender) {
+    if (values.age && values.age > 0 && values.height && values.height > 0 && values.weight && values.weight > 0 && values.gender) {
       onFormChange(values);
     }
   }, [watchedValues, onFormChange, getValues]);
@@ -175,10 +175,11 @@ export function EnhancedInputForm({ onFormChange, isMetric, onUnitToggle }: Enha
                         className={`apple-input h-12 text-base rounded-xl border-gray-200/50 bg-white/70 backdrop-blur-sm pl-4 pr-12 transition-all duration-300 ${
                           focusedField === 'age' ? 'ring-2 ring-blue-500/20 border-blue-500 shadow-lg scale-105' : ''
                         } ${completedFields.has('age') ? 'border-green-300 bg-green-50/30' : ''}`}
+                        {...field}
+                        value={field.value || ''}
                         onFocus={() => setFocusedField('age')}
                         onBlur={() => setFocusedField(null)}
-                        {...field}
-                        onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
+                        onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : 0)}
                       />
                       <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                         years
@@ -276,10 +277,11 @@ export function EnhancedInputForm({ onFormChange, isMetric, onUnitToggle }: Enha
                           className={`apple-input h-12 text-base rounded-xl border-gray-200/50 bg-white/70 backdrop-blur-sm transition-all duration-300 ${
                             focusedField === 'height' ? 'ring-2 ring-blue-500/20 border-blue-500 shadow-lg scale-105' : ''
                           } ${completedFields.has('height') ? 'border-green-300 bg-green-50/30' : ''}`}
+                          {...field}
+                          value={field.value || ''}
                           onFocus={() => setFocusedField('height')}
                           onBlur={() => setFocusedField(null)}
-                          {...field}
-                          onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
+                          onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : 0)}
                         />
                         {completedFields.has('height') && (
                           <div className="absolute right-3 top-1/2 transform -translate-y-1/2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
@@ -316,10 +318,11 @@ export function EnhancedInputForm({ onFormChange, isMetric, onUnitToggle }: Enha
                           className={`apple-input h-12 text-base rounded-xl border-gray-200/50 bg-white/70 backdrop-blur-sm transition-all duration-300 ${
                             focusedField === 'weight' ? 'ring-2 ring-blue-500/20 border-blue-500 shadow-lg scale-105' : ''
                           } ${completedFields.has('weight') ? 'border-green-300 bg-green-50/30' : ''}`}
+                          {...field}
+                          value={field.value || ''}
                           onFocus={() => setFocusedField('weight')}
                           onBlur={() => setFocusedField(null)}
-                          {...field}
-                          onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
+                          onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : 0)}
                         />
                         {completedFields.has('weight') && (
                           <div className="absolute right-3 top-1/2 transform -translate-y-1/2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
